@@ -2,9 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from .config import Config
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
 migrate = Migrate()
+ma = Marshmallow()
 
 def create_app():
     app = Flask(__name__)
@@ -13,7 +15,7 @@ def create_app():
     app.json.sort_keys = False
 
     db.init_app(app)  # associa o SQLAlchemy à aplicação Flask
-
+    ma.init_app(app)
     migrate.init_app(app, db)
 
     from .routes.messages import messages_bp

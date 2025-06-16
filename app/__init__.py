@@ -20,5 +20,10 @@ def create_app():
 
     from .routes.messages import messages_bp
     app.register_blueprint(messages_bp, url_prefix="/messages")
+    
+    with app.app_context():
+        from app.models.usuario import Usuario
+        from app.models.message import Message
+        db.create_all()
 
     return app

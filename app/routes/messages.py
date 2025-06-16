@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify,request
 from app.models.message import Message
 from .. import db
 from ..schemas.message_schema import MessageSchema
@@ -11,7 +11,8 @@ messages_bp = Blueprint('messages', __name__)
 
 @messages_bp.route("/", methods=["GET"])
 def get_messages():
-    return jsonify({"messages": ["Olá, mundo!", "Essa é a segunda mensagem."]})
+    messages = Message.query.order_by(Message.created_at.desc()).all()
+    return jsonify([msg.to_dict() for msg in messages])
 
 # Rota para obter uma mensagem por id
 @messages_bp.route('/<int:message_id>', methods=['GET'])

@@ -21,6 +21,10 @@ def create_app():
     from .routes.messages import messages_bp
     app.register_blueprint(messages_bp, url_prefix="/messages")
     
+    from .routes.usuario import usuario_bp
+    app.register_blueprint(usuario_bp, url_prefix="/usuario")
+    
+    
     with app.app_context():
         from app.models.usuario import Usuario
         from app.models.message import Message

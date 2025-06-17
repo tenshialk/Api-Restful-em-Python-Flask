@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
+from email_validator import validate_email,EmailNotValidError
 from app.models.usuario import Usuario 
 from .. import db
 from ..schemas.usuario_Schema import usuarioSchema
@@ -23,9 +24,17 @@ def get_usuario(usuario_id):
 @usuarios_bp.route('/', methods=['POST'])
 def create_usuario():
     data = request.get_json()
+    if Usuario.query.filter_by(email=data['email']).first():
+         abort(400, description="email ja existente")
     
-    if not data or 'nome' not in data:
+    if not data or 'nome' not in data or len(data['nome']) < 1:
         abort(400, description="Campo 'nome' é obrigatório.")
+    
+    try:
+        emailcheck = validate_email(data[email])
+        email = emailcheck.normalized
+    except EmailNotValidError as e :
+        abort(400,description =e)
     
     novo_usuario = Usuario(nome=data['nome'],email=data['email'], senha = data['senha'])
     db.session.add(novo_usuario)

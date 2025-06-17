@@ -21,8 +21,8 @@ def create_app():
     from .routes.messages import messages_bp
     app.register_blueprint(messages_bp, url_prefix="/messages")
     
-    from .routes.usuario import usuario_bp
-    app.register_blueprint(usuario_bp, url_prefix="/usuario")
+    from .routes.usuario import usuarios_bp
+    app.register_blueprint(usuarios_bp, url_prefix="/usuario")
     
     
     with app.app_context():

@@ -23,10 +23,11 @@ def get_usuario(usuario_id):
 @usuarios_bp.route('/', methods=['POST'])
 def create_usuario():
     data = request.get_json()
+    
     if not data or 'nome' not in data:
         abort(400, description="Campo 'nome' é obrigatório.")
     
-    novo_usuario = Usuario(nome=data['nome'])
+    novo_usuario = Usuario(nome=data['nome'],email=data['email'], senha = data['senha'])
     db.session.add(novo_usuario)
     db.session.commit()
     
@@ -41,6 +42,8 @@ def update_usuario(usuario_id):
         abort(400, description="Campo 'nome' é obrigatório.")
     
     usuario.nome = data['nome']
+    usuario.email = data['email']
+    usuario.senha = data['senha']
     db.session.commit()
     
     return jsonify(usuario.to_dict()), 200

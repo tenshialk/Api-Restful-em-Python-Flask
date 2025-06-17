@@ -8,5 +8,7 @@ class usuarioSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True  
         fields = ("id", "content", "created_at")  # mantém a ordem do modelo
     id = fields.Int(dump_only=True)
-    content = fields.Str(required=True, validate=validate.Length(min=1, max=140))
+    email = fields.Str(required=True, validate=validate.Length(min=1, max=140))
+    nome = fields.Str(required=True, validate=validate.Length(min=1, max=140))
+    senha = fields.Str(required=True, validate=validate.Length(min=1, max=140))
     created_at = fields.DateTime(dump_only=True)

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
+import re
 from email_validator import validate_email,EmailNotValidError
 from app.models.usuario import Usuario 
 from .. import db
@@ -26,16 +27,17 @@ def create_usuario():
     data = request.get_json()
     if Usuario.query.filter_by(email=data['email']).first():
          abort(400, description="email ja existente")
-    
     if not data or 'nome' not in data or len(data['nome']) < 1:
         abort(400, description="Campo 'nome' é obrigatório.")
     
     try:
-        emailcheck = validate_email(data[email])
+        emailcheck = validate_email(data['email'])
         email = emailcheck.normalized
     except EmailNotValidError as e :
-        abort(400,description =e)
-    
+        abort(400,description =e)  
+    regex_senha = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]|:;\"'<>,.?/~`]).{8,}$") 
+    if not regex_senha.match(data['senha']):
+        abort(400, description="senha deve ter no minimo 8 caractere uma letra maiuscula minuscula e um digito numerico e um caractere especial")    
     novo_usuario = Usuario(nome=data['nome'],email=data['email'], senha = data['senha'])
     db.session.add(novo_usuario)
     db.session.commit()

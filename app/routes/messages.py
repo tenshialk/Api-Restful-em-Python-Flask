@@ -26,8 +26,8 @@ def create_message():
     data = request.get_json()
     if not data or 'content' not in data:
         abort(400, description="Campo 'content' é obrigatório.")
-    new_message = Message(content=data['content'], autor=autor_padrao)
     autor_padrao = 1
+    new_message = Message(content=data['content'], autor=autor_padrao)
     db.session.add(new_message)
     db.session.commit()
     

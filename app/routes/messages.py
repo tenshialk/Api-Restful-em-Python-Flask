@@ -26,8 +26,8 @@ def create_message():
     data = request.get_json()
     if not data or 'content' not in data:
         abort(400, description="Campo 'content' é obrigatório.")
-    
-    new_message = Message(content=data['content'])
+    new_message = Message(content=data['content'], autor_id=autor_id_padrao)
+    autor_id_padrao = 1
     db.session.add(new_message)
     db.session.commit()
     
@@ -40,7 +40,8 @@ def update_message(message_id):
     data = request.get_json()
     if not data or 'content' not in data:
         abort(400, description="Campo 'content' é obrigatório.")
-    
+    if "autor" in data and data["autor"] != message.autor:
+        return jsonify({"erro": "O autor da mensagem não pode ser alterado."}), 400
     message.content = data['content']
     db.session.commit()
     
